@@ -4,7 +4,6 @@
 from os import path as op
 
 from flask import current_app
-from flask._compat import string_types
 from werkzeug.local import LocalProxy
 from werkzeug.utils import import_string
 
@@ -32,6 +31,8 @@ class _CollectState(object):
             'COLLECT_STORAGE', 'flask_collect.storage.file')
 
         filter_ = app.config.get('COLLECT_FILTER')
+        # flask no longer has _compat
+        string_types = (str,) if str is not bytes else (str, unicode)  # noqa
         if filter_ is not None and isinstance(filter_, string_types):
             filter_ = import_string(filter_)
         self.filter = filter_ if filter_ is not None else list
